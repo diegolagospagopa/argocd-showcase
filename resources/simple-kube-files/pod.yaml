@@ -1,0 +1,19 @@
+---
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: busybox-pod
+  namespace: diego
+spec:
+  containers:
+    - name: busybox
+      image: busybox
+      command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+      volumeMounts:
+        - name: config-volume
+          mountPath: /etc/config
+  volumes:
+    - name: config-volume
+      configMap:
+        name: busybox-config
