@@ -16,21 +16,9 @@ metadata:
 spec:
   project: terraform-argocd-project
   source:
-#    chart: microservice-chart
-#    targetRevision: 5.4.0
-    repoURL: 'https://github.com/pagopa/devops-app-status'
-    path: helm/devopslab/diego
-    helm:
-      releaseName: broken-ingress
-      valueFiles:
-        - values-dev.yaml
-      valuesObject:
-        microservice-chart:
-          namespace: "diego"
-          ingress:
-            path: /broken-ingress/status(/|$)(.*)
-            host: "dev01.broken.internal.devopslab.pagopa.it"
-            servicePort: 8888
+    targetRevision: argocd-apps
+    repoURL: 'https://github.com/diegolagospagopa/argocd-showcase'
+    path: resources/broken-ingress
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: diego
