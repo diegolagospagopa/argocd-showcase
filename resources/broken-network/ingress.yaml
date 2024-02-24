@@ -8,8 +8,8 @@ metadata:
     nginx.ingress.kubernetes.io/satisfy: any
     nginx.ingress.kubernetes.io/use-regex: 'true'
   labels:
-    argocd.argoproj.io/instance: broken-ingress
-  name: broken-ingress-microservice-chart
+    argocd.argoproj.io/instance: broken-network
+  name: broken-network-microservice-chart
   namespace: diego
 spec:
   ingressClassName: nginx
@@ -19,11 +19,11 @@ spec:
         paths:
           - backend:
               service:
-                # name: broken-ingress-microservice-chart
+                # name: broken-network-microservice-chart
                 name: broken
                 port:
                   number: 8000
-            path: /broken-ingress/status(/|$)(.*)
+            path: /broken-network/status(/|$)(.*)
             pathType: ImplementationSpecific
   tls:
     - hosts:
