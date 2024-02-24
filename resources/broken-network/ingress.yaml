@@ -19,9 +19,10 @@ spec:
         paths:
           - backend:
               service:
-                name: broken-ingress-microservice-chart
+                # name: broken-ingress-microservice-chart
+                name: broken
                 port:
-                  number: 8888
+                  number: 8000
             path: /broken-ingress/status(/|$)(.*)
             pathType: ImplementationSpecific
   tls:

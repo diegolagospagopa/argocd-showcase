@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: broken-ingress
+  name: broken-network
   # You'll usually want to add your resources to the argocd namespace.
   namespace: argocd
   # Add this finalizer ONLY if you want these to cascade delete.
@@ -12,13 +12,13 @@ metadata:
     # - resources-finalizer.argocd.argoproj.io/background
   # Add labels to your application object.
   labels:
-    name: broken-ingress
+    name: broken-network
 spec:
   project: terraform-argocd-project
   source:
     targetRevision: argocd-apps
     repoURL: 'https://github.com/diegolagospagopa/argocd-showcase'
-    path: resources/broken-ingress
+    path: resources/broken-network
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: diego
