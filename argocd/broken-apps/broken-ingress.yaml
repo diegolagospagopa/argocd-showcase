@@ -29,7 +29,8 @@ spec:
           namespace: "diego"
           ingress:
             path: /broken-ingress/status(/|$)(.*)
-            hosta: "dev01.broken.internal.devopslab.pagopa.it"
+            host: "dev01.broken.internal.devopslab.pagopa.it"
+            servicePort: 8888
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: diego
