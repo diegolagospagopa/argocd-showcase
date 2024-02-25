@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    reloader.stakater.com/auto: 'true'
+  labels:
+    app.kubernetes.io/instance: broken-pod
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: microservice-chart
+    app.kubernetes.io/version: v1.5.0
+    argocd.argoproj.io/instance: broken-pod
+    canaryDelivery: 'false'
+    helm.sh/blueprint-version: 5.4.1
+    helm.sh/chart: microservice-chart-v1.5.0
+  name: broken-pod-microservice-chart
+  namespace: diego
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: broken-pod
+      app.kubernetes.io/name: microservice-chart
+      canaryDelivery: 'false'
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        aadpodidbinding: diego-pod-identity
+        app.kubernetes.io/instance: broken-pod
+        app.kubernetes.io/name: microservice-chart
+        app.kubernetes.io/version: v1.5.0
+        canaryDelivery: 'false'
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - image: 'ghcr.io/pagopa/devops-app-status:v0.0.0'
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /status
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: microservice-chart
+          ports:
+            - containerPort: 8000
+              name: app-port-8000
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /status
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 40m
+              memory: 128Mi
+            requests:
+              cpu: 40m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - all
+            readOnlyRootFilesystem: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /tmp
+              name: tmp
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccount: default
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - emptyDir: {}
+          name: tmp
