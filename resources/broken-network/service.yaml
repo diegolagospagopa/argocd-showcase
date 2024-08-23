@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+  labels:
+    app.kubernetes.io/instance: broken-network
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: microservice-chart
+    app.kubernetes.io/version: v1.5.0
+    argocd.argoproj.io/instance: broken-network
+    canaryDelivery: 'false'
+    helm.sh/blueprint-version: 5.4.1
+    helm.sh/chart: microservice-chart-v1.5.0
+  name: broken-network-microservice-chart
+  namespace: diego
+spec:
+  ports:
+    - name: app-port-8000-svc
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app.kubernetes.io/instance: broken-network
+    app.kubernetes.io/name: microservice-chart
+    canaryDelivery: 'false'
+  type: ClusterIP
